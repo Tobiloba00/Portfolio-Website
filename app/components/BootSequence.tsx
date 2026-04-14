@@ -20,6 +20,15 @@ export default function BootSequence() {
     const [glitching, setGlitching] = useState(false);
 
     useEffect(() => {
+        // Skip the boot overlay on touch devices — it's a heavy full-screen
+        // overlay with an infinite CSS animation that fights with the hero
+        // mount on iOS and makes the first paint feel laggy.
+        const isTouch = window.matchMedia('(pointer: coarse)').matches;
+        if (isTouch) {
+            setIsBooting(false);
+            return;
+        }
+
         // Check if we already booted this session
         if (sessionStorage.getItem('booted_v2')) {
             setIsBooting(false);

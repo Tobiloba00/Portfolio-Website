@@ -1,12 +1,20 @@
 'use client';
 
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 
 export default function ParticleBackground() {
     const canvasRef = useRef<HTMLCanvasElement>(null);
     const mouseRef = useRef({ x: 0, y: 0 });
+    const [enabled, setEnabled] = useState(false);
 
     useEffect(() => {
+        // Skip on touch devices and reduced-motion preferences — the canvas
+        // animation is purely decorative and is a major jank source on iOS.
+        const isTouch = window.matchMedia('(pointer: coarse)').matches;
+        const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+        if (isTouch || prefersReducedMotion) return;
+        setEnabled(true);
+
         const canvas = canvasRef.current;
         if (!canvas) return;
         const ctx = canvas.getContext('2d');
@@ -112,6 +120,8 @@ export default function ParticleBackground() {
             cancelAnimationFrame(animationFrameId);
         };
     }, []);
+
+    if (!enabled) return null;
 
     return (
         <canvas

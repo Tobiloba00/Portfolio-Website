@@ -52,7 +52,7 @@ function HeroTypewriter() {
 
 export default function Hero() {
     return (
-        <section className="relative min-h-screen flex flex-col items-center justify-center overflow-hidden px-5 sm:px-6 pt-28 pb-32">
+        <section className="relative min-h-screen min-h-[100svh] flex flex-col items-center justify-center overflow-hidden px-5 sm:px-6 pt-28 pb-32">
 
             {/* Background Glow */}
             <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
