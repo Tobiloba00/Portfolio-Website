@@ -1,0 +1,221 @@
+@import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&family=JetBrains+Mono:wght@100;200;300;400;500;600&family=Syne:wght@400;500;600;700;800&display=swap');
+
+@import "tailwindcss";
+
+@theme {
+  --font-display: 'Bebas Neue', sans-serif;
+  --font-body: 'JetBrains Mono', monospace;
+  --font-sub: 'Syne', sans-serif;
+
+  --color-amber: #F5A623;
+  --color-green-neon: #00FF94;
+  --color-bg: #080808;
+  --color-surface: #0e0e0e;
+}
+
+/* Reset & base */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html {
+  /* Removed scroll-behavior: smooth since Lenis handles it */
+}
+
+body {
+  margin: 0;
+  background-color: #080808;
+  color: #F0F0F0;
+  font-family: 'JetBrains Mono', monospace;
+  overflow-x: hidden;
+}
+
+/* Custom cursor — only on devices with a fine pointer (mouse) */
+@media (pointer: fine) {
+
+  body,
+  a,
+  button,
+  [role="button"],
+  input,
+  select,
+  textarea {
+    cursor: none !important;
+  }
+}
+
+/* Circuit-trace grid overlay removed — replaced with particle system */
+
+/* Scrollbar */
+::-webkit-scrollbar {
+  width: 4px;
+}
+
+::-webkit-scrollbar-track {
+  background: #080808;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #F5A623;
+  border-radius: 2px;
+}
+
+/* Font utility classes */
+.font-display {
+  font-family: 'Bebas Neue', sans-serif;
+}
+
+.font-body {
+  font-family: 'JetBrains Mono', monospace;
+}
+
+.font-sub {
+  font-family: 'Syne', sans-serif;
+}
+
+/* Glassmorphism */
+.glass {
+  background: rgba(255, 255, 255, 0.03);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+}
+
+/* Diagonal clip utilities */
+.diagonal-clip {
+  clip-path: polygon(0 0, 100% 0, 100% 93%, 0 100%);
+  padding-bottom: 5rem;
+}
+
+.diagonal-clip-reverse {
+  clip-path: polygon(0 7%, 100% 0, 100% 100%, 0 100%);
+  padding-top: 6rem;
+}
+
+/* Glitch Animations */
+@keyframes glitch-anim-1 {
+  0% {
+    clip-path: inset(20% 0 80% 0);
+    transform: translate(-2px, 1px);
+  }
+
+  20% {
+    clip-path: inset(60% 0 10% 0);
+    transform: translate(2px, -1px);
+  }
+
+  40% {
+    clip-path: inset(40% 0 50% 0);
+    transform: translate(-2px, 2px);
+  }
+
+  60% {
+    clip-path: inset(80% 0 5% 0);
+    transform: translate(2px, -2px);
+  }
+
+  80% {
+    clip-path: inset(10% 0 70% 0);
+    transform: translate(-1px, 1px);
+  }
+
+  100% {
+    clip-path: inset(30% 0 50% 0);
+    transform: translate(1px, -1px);
+  }
+}
+
+@keyframes glitch-anim-2 {
+  0% {
+    clip-path: inset(10% 0 60% 0);
+    transform: translate(2px, -1px);
+  }
+
+  20% {
+    clip-path: inset(30% 0 20% 0);
+    transform: translate(-2px, 1px);
+  }
+
+  40% {
+    clip-path: inset(70% 0 10% 0);
+    transform: translate(2px, 2px);
+  }
+
+  60% {
+    clip-path: inset(20% 0 50% 0);
+    transform: translate(-2px, -2px);
+  }
+
+  80% {
+    clip-path: inset(50% 0 30% 0);
+    transform: translate(1px, 1px);
+  }
+
+  100% {
+    clip-path: inset(5% 0 80% 0);
+    transform: translate(-1px, -1px);
+  }
+}
+
+.glitch-hover-effect {
+  position: relative;
+}
+
+.glitch-hover-effect::before,
+.glitch-hover-effect::after {
+  content: attr(data-text);
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  opacity: 0;
+}
+
+.glitch-hover-effect:hover::before {
+  left: 2px;
+  text-shadow: -1px 0 red;
+  animation: glitch-anim-1 2s infinite linear alternate-reverse;
+  opacity: 1;
+}
+
+.glitch-hover-effect:hover::after {
+  left: -2px;
+  text-shadow: -1px 0 blue;
+  animation: glitch-anim-2 3s infinite linear alternate-reverse;
+  opacity: 1;
+}
+
+/* Extreme boot glitch */
+.animate-glitch-extreme {
+  animation: extreme-glitch 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94) both infinite;
+  color: transparent !important;
+  text-shadow: 2px 2px #00FF94, -2px -2px #FF003C;
+}
+
+@keyframes extreme-glitch {
+  0% {
+    transform: translate(0)
+  }
+
+  20% {
+    transform: translate(-4px, 4px) skew(10deg)
+  }
+
+  40% {
+    transform: translate(-4px, -4px)
+  }
+
+  60% {
+    transform: translate(4px, 4px) skew(-10deg)
+  }
+
+  80% {
+    transform: translate(4px, -4px)
+  }
+
+  100% {
+    transform: translate(0)
+  }
+}
