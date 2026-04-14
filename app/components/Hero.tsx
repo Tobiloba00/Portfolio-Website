@@ -54,9 +54,9 @@ export default function Hero() {
     return (
         <section className="relative min-h-screen min-h-[100svh] flex flex-col items-center justify-center overflow-hidden px-5 sm:px-6 pt-28 pb-32">
 
-            {/* Background Glow */}
+            {/* Background Glow — reduced blur on mobile to avoid iOS GPU jank */}
             <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
-                <div className="w-[60%] h-[60%] rounded-full bg-amber opacity-[0.03] blur-[100px]" />
+                <div className="w-[60%] h-[60%] rounded-full bg-amber opacity-[0.03] blur-[40px] md:blur-[100px]" />
             </div>
 
             <div className="relative z-10 max-w-7xl w-full text-center">
@@ -130,9 +130,9 @@ export default function Hero() {
             </motion.div>
 
             {/* Looping Ticker */}
-            <div className="absolute bottom-0 w-full py-6 overflow-hidden bg-black/20 backdrop-blur-sm">
-                <div className="flex animate-marquee whitespace-nowrap">
-                    {Array(4).fill(tickerItems).flat().map((item, i) => (
+            <div className="absolute bottom-0 w-full py-6 overflow-hidden bg-black/20 md:backdrop-blur-sm">
+                <div className="flex animate-marquee whitespace-nowrap will-change-transform">
+                    {Array(2).fill(tickerItems).flat().map((item, i) => (
                         <span key={i} className="font-body text-[9px] tracking-[0.4em] text-[#222] uppercase px-12 flex items-center">
                             {item} <span className="ml-12 w-1 h-1 bg-amber/20 rounded-full" />
                         </span>
