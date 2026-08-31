@@ -10,7 +10,6 @@ export const metadata: Metadata = {
     "Shipping automation, CRMs and AI systems for UK brands and product teams. Co-founder of Omniai.",
   keywords: [
     "AI automation",
-    "n8n",
     "React developer",
     "Next.js",
     "startup founder",

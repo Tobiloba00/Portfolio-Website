@@ -15,7 +15,7 @@ const services = [
             </svg>
         ),
         title: 'AI Workflow Automation',
-        description: 'I build n8n pipelines that connect your tools and remove manual work permanently. Lead gen, customer support automation, document processing, CRM syncing, AI-powered triage — if it can be automated, I\'ll build it so it runs without you touching it.',
+        description: 'I build AI automation pipelines that connect your tools and remove manual work permanently. Lead gen, customer support automation, document processing, CRM syncing, AI-powered triage — if it can be automated, I\'ll build it so it runs without you touching it.',
     },
     {
         id: '02',

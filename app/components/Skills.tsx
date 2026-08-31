@@ -27,7 +27,7 @@ const categoryColors: Record<CategoryKey, string> = {
 
 const skills: Skill[] = [
     // AI & Automation
-    { name: 'n8n', category: 'AI & Automation' },
+    { name: 'Workflow Automation', category: 'AI & Automation' },
     { name: 'LLM Prompt Eng', category: 'AI & Automation' },
     { name: 'AI Agents', category: 'AI & Automation' },
     { name: 'Mistral', category: 'AI & Automation' },

@@ -12,6 +12,7 @@ type Project = {
     description: string;
     stack: string[];
     status: string;
+    link?: string;
 };
 
 const projects: Project[] = [
@@ -19,24 +20,24 @@ const projects: Project[] = [
         id: '01',
         name: 'BIUK Customer Operations Stack',
         type: 'Client Infrastructure',
-        description: "Migrated a UK brand's entire support system off Freshdesk and onto a self-hosted Chatwoot instance running on DigitalOcean. Built WhatsApp integration through Meta's Cloud API, an n8n order-tracking bot connected to Shopify, and automated response flows for a team handling daily customer operations end to end.",
-        stack: ['n8n', 'Chatwoot', 'DigitalOcean', 'WhatsApp API', 'Shopify API', 'Meta Cloud API'],
-        status: 'Live in production',
+        description: "Migrated a UK brand's entire support system off Freshdesk and onto a self-hosted Chatwoot instance running on DigitalOcean. Built WhatsApp integration through Meta's Cloud API, an AI-powered order-tracking bot connected to Shopify, and automated response flows for a team handling daily customer operations end to end.",
+        stack: ['AI Automation', 'Chatwoot', 'DigitalOcean', 'WhatsApp API', 'Shopify API', 'Meta Cloud API'],
+        status: 'Past client work',
     },
     {
         id: '02',
         name: 'Mocha Properties Automation System',
         type: 'Client Automation',
-        description: 'End-to-end property management automation. Maintenance requests triaged automatically, contractors matched and messaged, landlord reports generated — all without manual intervention. Built entirely in n8n with an AI agent in the loop for classification and drafting.',
-        stack: ['n8n', 'Notion', 'Google Drive', 'AI Agent', 'Gmail'],
-        status: 'Live in production',
+        description: 'End-to-end property management automation. Maintenance requests triaged automatically, contractors matched and messaged, landlord reports generated — all without manual intervention. Built entirely with AI automation workflows, with an agent in the loop for classification and drafting.',
+        stack: ['AI Automation', 'Notion', 'Google Drive', 'AI Agent', 'Gmail'],
+        status: 'Past client work',
     },
     {
         id: '03',
         name: 'Apollo → AI → Gmail Lead Pipeline',
         type: 'Automation System',
         description: 'Full lead generation engine. Scrapes decision-maker contacts from Apollo via Apify, runs each lead through an AI agent for personalised outreach research, drafts custom emails, and sends through Gmail. Triggered from Telegram and logged back to a sheet.',
-        stack: ['n8n', 'Apify', 'Apollo.io', 'OpenRouter', 'Gmail', 'Google Sheets', 'Telegram'],
+        stack: ['AI Automation', 'Apify', 'Apollo.io', 'OpenRouter', 'Gmail', 'Google Sheets', 'Telegram'],
         status: 'Shipped',
     },
     {
@@ -44,7 +45,7 @@ const projects: Project[] = [
         name: 'Telegram → Notion OCR Pipeline',
         type: 'AI Automation',
         description: 'Receives unstructured Telegram messages containing document data, runs OCR, passes the content through Mistral for interpretation, decides whether to create or update a Notion record, preserves existing fields, logs every action, and sends a structured summary back to Telegram.',
-        stack: ['n8n', 'Telegram', 'Mistral AI', 'Notion API', 'OCR', 'HTTP nodes'],
+        stack: ['AI Automation', 'Telegram', 'Mistral AI', 'Notion API', 'OCR', 'Webhooks'],
         status: 'Shipped',
     },
     {
@@ -54,6 +55,7 @@ const projects: Project[] = [
         description: 'Peer-to-peer marketplace platform for university students. Students post tasks, request services, and connect with others on campus. Built from MVP with full branding, logo, UI/UX across dark and light modes, a Twitter-style comment and threading system, and a school verification role system.',
         stack: ['Next.js', 'Supabase', 'React', 'TypeScript', 'Tailwind CSS'],
         status: 'Near launch',
+        link: 'https://campuslink-self.vercel.app',
     },
     {
         id: '06',
@@ -99,9 +101,45 @@ const projects: Project[] = [
         id: '11',
         name: 'FUOYE AI University Agent',
         type: 'AI System',
-        description: 'AI assistant designed for university use at FUOYE. Built on n8n with LLM integration, handling student queries through a no-code AI workflow architecture that non-engineers on staff can actually maintain.',
-        stack: ['n8n', 'LLM nodes', 'AI Agent'],
+        description: 'AI assistant designed for university use at FUOYE. Built with AI automation workflows and LLM integration, handling student queries through a no-code architecture that non-engineers on staff can actually maintain.',
+        stack: ['AI Automation', 'LLM Integration', 'AI Agent'],
         status: 'Built',
+    },
+    {
+        id: '12',
+        name: 'NEXUS Protocol',
+        type: 'Web3 Dashboard',
+        description: 'A production-grade Web3 dashboard shipped as a single static HTML file — markets, NFTs, staking, governance and analytics, wired to live on-chain data from public APIs with graceful fallbacks. Ships with a persistent light/dark/auto theme system and a hidden admin panel for live rebranding across three preset configs, fully responsive down to a mobile drawer and bottom-sheet modals.',
+        stack: ['React', 'Tailwind CSS', 'CoinGecko API', 'Solana.fm'],
+        status: 'Shipped',
+        link: 'https://nexus-protocol-inky.vercel.app',
+    },
+    {
+        id: '13',
+        name: 'Salama',
+        type: 'Product Concept',
+        description: 'Ride-sharing app concept connecting urban commuters with vetted two-wheeler drivers. Covers instant rides, remote assistance, group transport and parcel delivery, with rider verification, in-app cashless payment, saved locations and booking history.',
+        stack: ['Mobile UX', 'Product Design', 'Ride-hailing'],
+        status: 'Concept / mockup',
+        link: 'https://salama-app-mockup.vercel.app',
+    },
+    {
+        id: '14',
+        name: 'DeflecTech',
+        type: 'Client Web Project',
+        description: 'Marketing site for a vehicle safety and intelligent mobility technology company, positioning their safety systems and mobility solutions to automotive manufacturers, fleet operators and transportation organisations.',
+        stack: ['HTML', 'CSS', 'JavaScript'],
+        status: 'Shipped',
+        link: 'https://deflectech-site.vercel.app',
+    },
+    {
+        id: '15',
+        name: 'Omniai',
+        type: 'Startup / Company Site',
+        description: 'Marketing site for Omniai, the AI automation company I co-founded. Covers starter automations, full workflow systems and custom AI builds for small-to-mid-size teams, built around a five-step delivery methodology from requirement analysis through deployment and training.',
+        stack: ['Next.js', 'TypeScript', 'Tailwind CSS'],
+        status: 'Live',
+        link: 'https://omniai-site.vercel.app',
     },
 ];
 
@@ -224,12 +262,26 @@ export default function Projects() {
                                         ))}
                                     </div>
 
-                                    <div className="flex items-center gap-4 pt-6 border-t border-white/5">
-                                        <span className="font-body text-[10px] tracking-[0.4em] text-[#444] uppercase">Status</span>
-                                        <span className="flex items-center gap-3 font-body text-xs tracking-widest uppercase text-green-neon">
-                                            <span className="w-2 h-2 rounded-full bg-green-neon animate-pulse" />
-                                            {selectedProject.status}
-                                        </span>
+                                    <div className="flex flex-wrap items-center gap-4 sm:gap-8 pt-6 border-t border-white/5">
+                                        <div className="flex items-center gap-4">
+                                            <span className="font-body text-[10px] tracking-[0.4em] text-[#444] uppercase">Status</span>
+                                            <span className="flex items-center gap-3 font-body text-xs tracking-widest uppercase text-green-neon">
+                                                <span className="w-2 h-2 rounded-full bg-green-neon animate-pulse" />
+                                                {selectedProject.status}
+                                            </span>
+                                        </div>
+                                        {selectedProject.link && (
+                                            <a
+                                                href={selectedProject.link}
+                                                target="_blank"
+                                                rel="noopener noreferrer"
+                                                onClick={(e) => e.stopPropagation()}
+                                                className="group flex items-center gap-2 font-body text-xs tracking-widest uppercase text-amber hover:text-white transition-colors"
+                                            >
+                                                Visit Live Site
+                                                <ArrowRight size={14} className="group-hover:translate-x-1 transition-transform" />
+                                            </a>
+                                        )}
                                     </div>
                                 </div>
                             </motion.div>

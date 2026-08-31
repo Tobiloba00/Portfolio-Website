@@ -34,7 +34,7 @@ When you're building automation, you're working in a controlled environment. You
 
 Real users don't know any of that. They just know they have a problem and your system is supposed to solve it.
 
-I learned this properly when I was building the customer support automation for BIUK — a UK brand that sells ProFoam. The workflow was straightforward: customer sends a WhatsApp message, n8n picks it up via Chatwoot, checks if it's an order query, looks up the order on Shopify, replies with tracking info.
+I learned this properly when I was building the customer support automation for BIUK — a UK brand that sells ProFoam. The workflow was straightforward: customer sends a WhatsApp message, an automation picks it up via Chatwoot, checks if it's an order query, looks up the order on Shopify, replies with tracking info.
 
 It worked perfectly in testing. Every single run.
 
@@ -115,7 +115,7 @@ So I went where the work was. Fiverr, Upwork, cold outreach, referrals. Over tim
 
 The first serious UK engagement came through a referral. A real estate company that needed their maintenance operations automated. Maintenance requests coming in through different channels, contractors being assigned manually, landlord reports being written by hand. The whole thing was a person doing work that a system should have been doing.
 
-I built it in n8n. Three weeks, fully operational. Maintenance request comes in, triage logic runs, the right contractor gets messaged, the appointment gets scheduled, the landlord gets a report. Nobody has to touch it.
+I built it with an AI automation workflow. Three weeks, fully operational. Maintenance request comes in, triage logic runs, the right contractor gets messaged, the appointment gets scheduled, the landlord gets a report. Nobody has to touch it.
 
 That project opened the door for everything after.
 
@@ -151,7 +151,7 @@ I used to think trust was built by being available — responding fast, always o
 
 Trust gets built when you spot a problem before your client does. When you flag something that isn't in your scope but would affect their outcome. When you send an update they didn't ask for because you know they're thinking about it.
 
-With BIUK — my current UK client — there was a point early in the engagement where I noticed the Chatwoot webhook was sometimes dropping messages during high traffic. I hadn't been asked to monitor that. It wasn't causing visible failures yet. But I flagged it, explained what I was seeing, and proposed a fix before it became a problem they had to come to me about.
+With BIUK — a UK client I worked with — there was a point early in the engagement where I noticed the Chatwoot webhook was sometimes dropping messages during high traffic. I hadn't been asked to monitor that. It wasn't causing visible failures yet. But I flagged it, explained what I was seeing, and proposed a fix before it became a problem they had to come to me about.
 
 That one moment did more for the working relationship than weeks of just completing assigned tasks.
 
@@ -173,15 +173,15 @@ It took me a while to actually believe that, not just say it.
 
 ---
 
-## Where I Am Now
+## What That Work Looked Like
 
-Right now I have two active UK clients. One in real estate, one in e-commerce. Between them I'm running n8n workflows that process customer support requests, track orders via Shopify, handle WhatsApp integrations, and sync data across Chatwoot, Notion, and Monday.com.
+I've worked with two UK clients — one in real estate, one in e-commerce. Between them I built AI automation workflows that processed customer support requests, tracked orders via Shopify, handled WhatsApp integrations, and synced data across Chatwoot, Notion, and Monday.com.
 
-It's real infrastructure. Real people at those companies use it every day without thinking about it. That's the goal every time — build it so well that it disappears into the background of how they work.
+It was real infrastructure. Real people at those companies used it every day without thinking about it. That's the goal every time — build it so well that it disappears into the background of how people work.
 
-I'm still in Nigeria. The clients are still in the UK. The time zone gap is still there.
+I'm still in Nigeria. The clients were still in the UK. The time zone gap was still there.
 
-But the work speaks loudly enough that it doesn't really matter.
+But the work spoke loudly enough that it didn't really matter.
 
 ---
 

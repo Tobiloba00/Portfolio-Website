@@ -27,11 +27,11 @@ const bioP1: TypewriterSegment[] = [
 ];
 
 const bioP2: TypewriterSegment[] = [
-    { text: "Right now I'm running the customer operations backend for two UK brands: " },
+    { text: "I've run the customer operations backend for two UK brands: " },
     { text: "Mocha Properties", className: "text-amber" },
     { text: " (real estate) and " },
     { text: "BIUK", className: "text-amber" },
-    { text: ", the team behind ProFoam. That means n8n workflows moving live data between their tools, custom support infrastructure built on Chatwoot and DigitalOcean, and integrations with WhatsApp, Monday.com, Notion and Shopify — so their teams stop copy-pasting between tabs and actually close tickets." },
+    { text: ", the team behind ProFoam. That meant AI automation workflows moving live data between their tools, custom support infrastructure built on Chatwoot and DigitalOcean, and integrations with WhatsApp, Monday.com, Notion and Shopify — so their teams stopped copy-pasting between tabs and actually closed tickets." },
 ];
 
 const bioP3: TypewriterSegment[] = [

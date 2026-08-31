@@ -5,7 +5,7 @@ import { useEffect, useState } from 'react';
 import ScrambleText from './ScrambleText';
 
 const tickerItems = [
-    'n8n', 'Next.js', 'Supabase', 'React', 'TypeScript', 'AI Agents',
+    'AI Automation', 'Next.js', 'Supabase', 'React', 'TypeScript', 'AI Agents',
     'Notion API', 'Firebase', 'Chatwoot', 'WhatsApp API', 'Mistral',
     'Apify', 'DigitalOcean', 'Vercel', 'Cloudflare', 'Lovable',
     'Bolt.new', 'Replit', 'Adalo', 'Stripe', 'RevenueCat', 'Capacitor',
