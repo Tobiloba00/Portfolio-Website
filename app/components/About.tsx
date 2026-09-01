@@ -15,7 +15,7 @@ type Stat = { value: number; suffix: string; label: string };
 
 const stats: Stat[] = [
     { value: 12, suffix: '+', label: 'AUTOMATION SYSTEMS BUILT' },
-    { value: 2, suffix: '', label: 'ACTIVE UK CLIENTS' },
+    { value: 2, suffix: '', label: 'ACTIVE CLIENTS' },
     { value: 10, suffix: '+', label: 'PRODUCTS SHIPPED' },
     { value: 2000, suffix: '+', label: 'YOUTUBE VIEWS // FIRST MONTH' },
     { value: 1, suffix: '', label: 'STARTUP CO-FOUNDED' },

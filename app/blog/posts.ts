@@ -87,13 +87,13 @@ That's the actual goal. Not a workflow that works in testing. One that works whe
 *Olujimi builds automation systems and full-stack products from Nigeria. If your team is copy-pasting between tabs, there's probably a better way.*`,
     },
     {
-        slug: 'building-for-uk-clients-from-nigeria',
-        title: 'What Building for UK Clients From Nigeria Actually Looks Like',
+        slug: 'building-for-international-clients-from-nigeria',
+        title: 'What Building for International Clients From Nigeria Actually Looks Like',
         category: 'My Journey',
         year: '2026',
         readTime: '7 min read',
         excerpt: 'Time zones, tools, trust, invoicing, and why the work itself eventually becomes the argument for hiring you.',
-        content: `The first time I got on a call with a UK client, it was 10pm my time and 9pm theirs.
+        content: `The first time I got on a call with an international client, it was 10pm my time and 9pm theirs.
 
 I had made sure my background was clean. I had tested my microphone three times. I had the project brief open in another tab in case I forgot something. I was nervous in the specific way you get nervous when you know the stakes are real — not test stakes, actual stakes.
 
@@ -107,13 +107,13 @@ This is that story.
 
 ## How It Started
 
-I didn't set out to work with UK clients specifically. I set out to find clients who would pay fairly for real work. That search led me away from local markets faster than I expected.
+I didn't set out to work with international clients specifically. I set out to find clients who would pay fairly for real work. That search led me away from local markets faster than I expected.
 
 Not because Nigerian businesses don't need automation or development work. They do. But the budget conversations were different. The expectations were different. The willingness to invest in infrastructure versus just getting something live and cheap — that was different.
 
 So I went where the work was. Fiverr, Upwork, cold outreach, referrals. Over time the pattern that emerged was: the clients who moved projects forward properly, communicated clearly, and paid on time were overwhelmingly international. UK and US, mostly.
 
-The first serious UK engagement came through a referral. A real estate company that needed their maintenance operations automated. Maintenance requests coming in through different channels, contractors being assigned manually, landlord reports being written by hand. The whole thing was a person doing work that a system should have been doing.
+The first serious international engagement came through a referral. A real estate company that needed their maintenance operations automated. Maintenance requests coming in through different channels, contractors being assigned manually, landlord reports being written by hand. The whole thing was a person doing work that a system should have been doing.
 
 I built it with an AI automation workflow. Three weeks, fully operational. Maintenance request comes in, triage logic runs, the right contractor gets messaged, the appointment gets scheduled, the landlord gets a report. Nobody has to touch it.
 
@@ -123,7 +123,7 @@ That project opened the door for everything after.
 
 ## The Time Zone Reality
 
-People romanticize working across time zones. "You can work from anywhere." Yes. But also: a client in London needs a response before they leave the office, which is 4pm their time, which is 5pm mine. If something breaks on a Friday afternoon their time, that's Friday evening mine. If they want a standup call in the morning, "morning" for them is often still very early for me.
+People romanticize working across time zones. "You can work from anywhere." Yes. But also: a client several hours ahead needs a response before they leave the office, which might be 4pm their time and 5pm mine. If something breaks on a Friday afternoon their time, that's Friday evening mine. If they want a standup call in the morning, "morning" for them is often still very early for me.
 
 You adapt. You build your schedule around it. You start communicating more through async messages so real-time availability matters less. You over-document everything so a client can check the status of something without waiting for you to be online.
 
@@ -133,7 +133,7 @@ The adaptation is real but it's manageable. What's less manageable — at first 
 
 ## The Context Gap Nobody Talks About
 
-When a UK client says "this is urgent," they mean something specific by that. When they say "can we hop on a call," that's not a casual suggestion. When they send a message that seems short and blunt, it's usually just efficiency, not rudeness.
+When an international client says "this is urgent," they mean something specific by that. When they say "can we hop on a call," that's not a casual suggestion. When they send a message that seems short and blunt, it's usually just efficiency, not rudeness.
 
 These things sound obvious but they're not obvious until you've gotten them wrong once or twice and had to recalibrate.
 
@@ -167,7 +167,7 @@ But the trap is staying there. Underpricing signals something to clients, even w
 
 I've raised my rates twice since I started doing this work. Both times I lost a few conversations. Both times the clients I retained or gained after the increase were better engagements than the ones before it.
 
-The work you do from Nigeria is not worth less than the same work done in London. The infrastructure you build either works or it doesn't. The automation you design either handles the volume or it doesn't. Geography is not a relevant variable in that evaluation.
+The work you do from Nigeria is not worth less than the same work done anywhere else in the world. The infrastructure you build either works or it doesn't. The automation you design either handles the volume or it doesn't. Geography is not a relevant variable in that evaluation.
 
 It took me a while to actually believe that, not just say it.
 
@@ -175,17 +175,17 @@ It took me a while to actually believe that, not just say it.
 
 ## What That Work Looked Like
 
-I've worked with two UK clients — one in real estate, one in e-commerce. Between them I built AI automation workflows that processed customer support requests, tracked orders via Shopify, handled WhatsApp integrations, and synced data across Chatwoot, Notion, and Monday.com.
+I've worked with international clients — one in real estate, one in e-commerce. Between them I built AI automation workflows that processed customer support requests, tracked orders via Shopify, handled WhatsApp integrations, and synced data across Chatwoot, Notion, and Monday.com.
 
 It was real infrastructure. Real people at those companies used it every day without thinking about it. That's the goal every time — build it so well that it disappears into the background of how people work.
 
-I'm still in Nigeria. The clients were still in the UK. The time zone gap was still there.
+I'm still in Nigeria. The clients were on the other side of the world. The time zone gap was still there.
 
 But the work spoke loudly enough that it didn't really matter.
 
 ---
 
-*Olujimi builds automation systems and full-stack products from Nigeria, working with clients in the UK and beyond. Currently open to new projects.*`,
+*Olujimi builds automation systems and full-stack products from Nigeria, working with clients internationally. Currently open to new projects.*`,
     },
     {
         slug: 'lenticular-art-marketplace-build-log',

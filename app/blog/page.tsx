@@ -7,6 +7,9 @@ import Footer from '../components/Footer';
 export const metadata: Metadata = {
     title: 'Blog — Tobiloba Olujimi',
     description: 'Writings on automation, client work and building production systems.',
+    alternates: {
+        canonical: '/blog',
+    },
 };
 
 export default function BlogIndexPage() {

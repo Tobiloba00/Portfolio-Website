@@ -18,6 +18,9 @@ export async function generateMetadata(
     return {
         title: `${post.title} — Tobiloba Olujimi`,
         description: post.excerpt,
+        alternates: {
+            canonical: `/blog/${slug}`,
+        },
     };
 }
 

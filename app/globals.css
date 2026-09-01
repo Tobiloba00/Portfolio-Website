@@ -1,12 +1,6 @@
-@import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&family=JetBrains+Mono:wght@100;200;300;400;500;600&family=Syne:wght@400;500;600;700;800&display=swap');
-
 @import "tailwindcss";
 
 @theme {
-  --font-display: 'Bebas Neue', sans-serif;
-  --font-body: 'JetBrains Mono', monospace;
-  --font-sub: 'Syne', sans-serif;
-
   --color-amber: #F5A623;
   --color-green-neon: #00FF94;
   --color-bg: #080808;
@@ -28,7 +22,7 @@ body {
   margin: 0;
   background-color: #080808;
   color: #F0F0F0;
-  font-family: 'JetBrains Mono', monospace;
+  font-family: var(--font-body, 'JetBrains Mono', monospace);
   overflow-x: hidden;
 }
 
@@ -62,17 +56,17 @@ body {
   border-radius: 2px;
 }
 
-/* Font utility classes */
+/* Font utility classes — variables injected by next/font in layout.tsx */
 .font-display {
-  font-family: 'Bebas Neue', sans-serif;
+  font-family: var(--font-display, 'Bebas Neue', sans-serif);
 }
 
 .font-body {
-  font-family: 'JetBrains Mono', monospace;
+  font-family: var(--font-body, 'JetBrains Mono', monospace);
 }
 
 .font-sub {
-  font-family: 'Syne', sans-serif;
+  font-family: var(--font-sub, 'Syne', sans-serif);
 }
 
 /* Glassmorphism */

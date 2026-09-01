@@ -93,7 +93,7 @@ export default function Hero() {
                 >
                     Shipping automation, CRMs
                     <span className="text-[#999]"> and AI systems </span>
-                    for UK brands and product teams.
+                    for growing businesses and startups worldwide.
                 </motion.p>
 
                 {/* CTAs */}
