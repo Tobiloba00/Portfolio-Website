@@ -4,6 +4,7 @@ import "./globals.css";
 import SmoothScroll from "./components/SmoothScroll";
 import CustomCursor from "./components/CustomCursor";
 import Navbar from "./components/Navbar";
+import PlaygroundLauncher from "./components/PlaygroundLauncher";
 
 const bebasNeue = Bebas_Neue({
   subsets: ["latin"],
@@ -106,6 +107,7 @@ export default function RootLayout({
           <CustomCursor />
           <Navbar />
           {children}
+          <PlaygroundLauncher />
         </SmoothScroll>
       </body>
     </html>

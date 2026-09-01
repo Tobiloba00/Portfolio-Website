@@ -34,7 +34,7 @@ When you're building automation, you're working in a controlled environment. You
 
 Real users don't know any of that. They just know they have a problem and your system is supposed to solve it.
 
-I learned this properly when I was building the customer support automation for BIUK — a UK brand that sells ProFoam. The workflow was straightforward: customer sends a WhatsApp message, an automation picks it up via Chatwoot, checks if it's an order query, looks up the order on Shopify, replies with tracking info.
+I learned this properly when I was building the customer support automation for BIUK, a brand that sells ProFoam. The workflow was straightforward: customer sends a WhatsApp message, an automation picks it up via Chatwoot, checks if it's an order query, looks up the order on Shopify, replies with tracking info.
 
 It worked perfectly in testing. Every single run.
 
@@ -111,7 +111,7 @@ I didn't set out to work with international clients specifically. I set out to f
 
 Not because Nigerian businesses don't need automation or development work. They do. But the budget conversations were different. The expectations were different. The willingness to invest in infrastructure versus just getting something live and cheap — that was different.
 
-So I went where the work was. Fiverr, Upwork, cold outreach, referrals. Over time the pattern that emerged was: the clients who moved projects forward properly, communicated clearly, and paid on time were overwhelmingly international. UK and US, mostly.
+So I went where the work was. Fiverr, Upwork, cold outreach, referrals. Over time the pattern that emerged was: the clients who moved projects forward properly, communicated clearly, and paid on time were overwhelmingly international, based mostly in Europe and North America.
 
 The first serious international engagement came through a referral. A real estate company that needed their maintenance operations automated. Maintenance requests coming in through different channels, contractors being assigned manually, landlord reports being written by hand. The whole thing was a person doing work that a system should have been doing.
 
@@ -151,7 +151,7 @@ I used to think trust was built by being available — responding fast, always o
 
 Trust gets built when you spot a problem before your client does. When you flag something that isn't in your scope but would affect their outcome. When you send an update they didn't ask for because you know they're thinking about it.
 
-With BIUK — a UK client I worked with — there was a point early in the engagement where I noticed the Chatwoot webhook was sometimes dropping messages during high traffic. I hadn't been asked to monitor that. It wasn't causing visible failures yet. But I flagged it, explained what I was seeing, and proposed a fix before it became a problem they had to come to me about.
+With BIUK — a client I worked with — there was a point early in the engagement where I noticed the Chatwoot webhook was sometimes dropping messages during high traffic. I hadn't been asked to monitor that. It wasn't causing visible failures yet. But I flagged it, explained what I was seeing, and proposed a fix before it became a problem they had to come to me about.
 
 That one moment did more for the working relationship than weeks of just completing assigned tasks.
 
@@ -194,7 +194,7 @@ But the work spoke loudly enough that it didn't really matter.
         year: '2026',
         readTime: '8 min read',
         excerpt: 'Sprite sheets, Notion sync, a 95% bandwidth win, and the bugs that nearly broke me. A full build log of a marketplace for art that actually moves.',
-        content: `A UK-based lenticular art company needed a full marketplace platform. Artists would submit their work, an admin would review and publish it, and buyers would browse a shop where the artwork actually moved — the way lenticular art is supposed to work.
+        content: `A lenticular art company needed a full marketplace platform. Artists would submit their work, an admin would review and publish it, and buyers would browse a shop where the artwork actually moved — the way lenticular art is supposed to work.
 
 Simple enough brief. Except nothing about lenticular art is simple to render on the web.
 

@@ -20,7 +20,7 @@ const projects: Project[] = [
         id: '01',
         name: 'BIUK Customer Operations Stack',
         type: 'Client Infrastructure',
-        description: "Migrated a UK brand's entire support system off Freshdesk and onto a self-hosted Chatwoot instance running on DigitalOcean. Built WhatsApp integration through Meta's Cloud API, an AI-powered order-tracking bot connected to Shopify, and automated response flows for a team handling daily customer operations end to end.",
+        description: "Migrated a client's entire support system off Freshdesk and onto a self-hosted Chatwoot instance running on DigitalOcean. Built WhatsApp integration through Meta's Cloud API, an AI-powered order-tracking bot connected to Shopify, and automated response flows for a team handling daily customer operations end to end.",
         stack: ['AI Automation', 'Chatwoot', 'DigitalOcean', 'WhatsApp API', 'Shopify API', 'Meta Cloud API'],
         status: 'Past client work',
     },

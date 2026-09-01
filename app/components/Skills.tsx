@@ -1,10 +1,10 @@
 'use client';
 
 import { useEffect, useRef, useState } from 'react';
-import createGlobe, { type Marker } from 'cobe';
+import TagCloud from 'TagCloud';
 import SectionHeader from './SectionHeader';
 
-type CategoryKey =
+export type CategoryKey =
     | 'AI & Automation'
     | 'Frontend'
     | 'Backend & Database'
@@ -17,7 +17,7 @@ type Skill = {
     category: CategoryKey;
 };
 
-const categoryColors: Record<CategoryKey, string> = {
+export const categoryColors: Record<CategoryKey, string> = {
     'AI & Automation': '#F5A623',
     'Frontend': '#00FF94',
     'Backend & Database': '#00D4FF',
@@ -102,50 +102,13 @@ const categoryList: CategoryKey[] = [
     'Platforms & Tools',
 ];
 
-// One pin per category — arbitrary but spread-out coordinates, not literal locations.
-const categoryMarkers: { category: CategoryKey; location: [number, number] }[] = [
-    { category: 'AI & Automation', location: [6.5244, 3.3792] }, // Lagos
-    { category: 'Frontend', location: [37.7749, -122.4194] }, // San Francisco
-    { category: 'Backend & Database', location: [51.5074, -0.1278] }, // London
-    { category: 'Mobile', location: [1.3521, 103.8198] }, // Singapore
-    { category: 'Infrastructure', location: [52.3676, 4.9041] }, // Amsterdam
-    { category: 'Platforms & Tools', location: [-33.8688, 151.2093] }, // Sydney
-];
-
-function hexToRgb01(hex: string): [number, number, number] {
-    const clean = hex.replace('#', '');
-    return [
-        parseInt(clean.substring(0, 2), 16) / 255,
-        parseInt(clean.substring(2, 4), 16) / 255,
-        parseInt(clean.substring(4, 6), 16) / 255,
-    ];
-}
-
-function buildMarkers(selected: CategoryKey | null): Marker[] {
-    return categoryMarkers.map((m) => ({
-        location: m.location,
-        size: selected === m.category ? 0.14 : 0.08,
-        color: hexToRgb01(categoryColors[m.category]),
-    }));
-}
-
 export default function Skills() {
     const wrapperRef = useRef<HTMLDivElement>(null);
-    const canvasRef = useRef<HTMLCanvasElement>(null);
-    const widthRef = useRef(0);
-    const phiRef = useRef(0);
-    const pointerInteracting = useRef<number | null>(null);
-    const pointerMovement = useRef(0);
-    const selectedCategoryRef = useRef<CategoryKey | null>(null);
-
+    const containerRef = useRef<HTMLDivElement>(null);
     const [inView, setInView] = useState(false);
     const [selectedCategory, setSelectedCategory] = useState<CategoryKey | null>(null);
 
-    useEffect(() => {
-        selectedCategoryRef.current = selectedCategory;
-    }, [selectedCategory]);
-
-    // Only run the globe while the section is actually on screen.
+    // Only run the tag cloud while the section is actually on screen.
     useEffect(() => {
         const el = wrapperRef.current;
         if (!el) return;
@@ -159,78 +122,44 @@ export default function Skills() {
 
     useEffect(() => {
         if (!inView) return;
-        const canvas = canvasRef.current;
-        if (!canvas) return;
+        const container = containerRef.current;
+        if (!container) return;
 
         const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-        const devicePixelRatio = Math.min(window.devicePixelRatio || 1, 2);
+        const radius = window.innerWidth < 640 ? 135 : window.innerWidth < 1024 ? 175 : 220;
 
-        const onResize = () => {
-            widthRef.current = canvas.offsetWidth;
-        };
-        window.addEventListener('resize', onResize);
-        onResize();
+        const texts = skills.map(
+            (s) => `<span style="color:${categoryColors[s.category]}">${s.name}</span>`
+        );
 
-        const globe = createGlobe(canvas, {
-            devicePixelRatio,
-            width: widthRef.current * devicePixelRatio,
-            height: widthRef.current * devicePixelRatio,
-            phi: phiRef.current,
-            theta: 0.3,
-            dark: 1,
-            diffuse: 1.2,
-            mapSamples: 12000,
-            mapBrightness: 6,
-            baseColor: [0.25, 0.25, 0.25],
-            markerColor: [0.96, 0.65, 0.14],
-            glowColor: [0.15, 0.15, 0.15],
-            markers: buildMarkers(selectedCategoryRef.current),
+        const cloud = TagCloud(container, texts, {
+            radius,
+            maxSpeed: 'fast',
+            initSpeed: 'slow',
+            keep: true,
+            useHTML: true,
         });
 
-        let animationFrameId: number;
-        const render = () => {
-            if (!prefersReducedMotion && pointerInteracting.current === null) {
-                phiRef.current += 0.004;
-            }
-            globe.update({
-                phi: phiRef.current + pointerMovement.current,
-                width: widthRef.current * devicePixelRatio,
-                height: widthRef.current * devicePixelRatio,
-                markers: buildMarkers(selectedCategoryRef.current),
-            });
-            animationFrameId = requestAnimationFrame(render);
-        };
-        render();
-
-        const onPointerDown = (e: PointerEvent) => {
-            pointerInteracting.current = e.clientX - pointerMovement.current * 200;
-            canvas.style.cursor = 'grabbing';
-        };
-        const onPointerUp = () => {
-            pointerInteracting.current = null;
-            canvas.style.cursor = 'grab';
-        };
-        const onPointerMove = (e: PointerEvent) => {
-            if (pointerInteracting.current !== null) {
-                const delta = e.clientX - pointerInteracting.current;
-                pointerMovement.current = delta / 200;
-            }
-        };
-
-        canvas.style.cursor = 'grab';
-        canvas.addEventListener('pointerdown', onPointerDown);
-        window.addEventListener('pointerup', onPointerUp);
-        window.addEventListener('pointermove', onPointerMove);
+        if (prefersReducedMotion) cloud.pause();
 
         return () => {
-            window.removeEventListener('resize', onResize);
-            canvas.removeEventListener('pointerdown', onPointerDown);
-            window.removeEventListener('pointerup', onPointerUp);
-            window.removeEventListener('pointermove', onPointerMove);
-            cancelAnimationFrame(animationFrameId);
-            globe.destroy();
+            cloud.destroy();
         };
     }, [inView]);
+
+    // Dim everything outside the selected category without touching the
+    // inline transform/opacity the library animates every frame.
+    useEffect(() => {
+        const container = containerRef.current;
+        if (!container) return;
+        const items = container.querySelectorAll<HTMLElement>('.tagcloud--item');
+        items.forEach((item, i) => {
+            const cat = skills[i]?.category;
+            item.style.filter = !selectedCategory || cat === selectedCategory
+                ? ''
+                : 'brightness(0.25) saturate(0.4)';
+        });
+    }, [selectedCategory, inView]);
 
     return (
         <section id="skills" className="relative py-24 md:py-32 px-5 md:px-6 bg-[#080808]">
@@ -244,55 +173,19 @@ export default function Skills() {
                 <div ref={wrapperRef} className="relative mt-12 bg-[#0a0a0a] border border-white/5 overflow-hidden">
                     <div className="absolute top-4 left-6 z-10 pointer-events-none">
                         <p className="font-body text-[8px] tracking-[0.4em] text-[#333] uppercase">
-                            Interactable // Global Atlas v3.0
+                            Interactable // Every Skill, All At Once
                         </p>
                     </div>
 
-                    <div className="flex flex-col lg:flex-row items-center gap-8 lg:gap-12 px-6 md:px-10 pt-16 pb-10">
-                        {/* Globe */}
-                        <div className="relative w-full max-w-[340px] sm:max-w-[420px] aspect-square mx-auto lg:mx-0 flex-shrink-0">
-                            <canvas
-                                ref={canvasRef}
-                                className="w-full h-full cursor-pointer touch-none"
-                                style={{ contain: 'layout paint size' }}
-                            />
-                        </div>
-
-                        {/* Selected category skill panel */}
-                        <div className="w-full lg:flex-1 min-h-[140px] flex flex-col justify-center">
-                            {selectedCategory ? (
-                                <>
-                                    <div className="flex items-center gap-3 mb-5">
-                                        <div
-                                            className="w-2 h-2 rounded-full"
-                                            style={{ backgroundColor: categoryColors[selectedCategory] }}
-                                        />
-                                        <span className="font-body text-xs tracking-[0.35em] uppercase text-white">
-                                            {selectedCategory}
-                                        </span>
-                                    </div>
-                                    <div className="flex flex-wrap gap-2.5">
-                                        {skills
-                                            .filter((s) => s.category === selectedCategory)
-                                            .map((s) => (
-                                                <span
-                                                    key={s.name}
-                                                    className="font-body text-[10px] tracking-widest uppercase px-3.5 py-2 border border-white/10 bg-white/[0.02] text-[#ccc]"
-                                                >
-                                                    {s.name}
-                                                </span>
-                                            ))}
-                                    </div>
-                                </>
-                            ) : (
-                                <p className="font-body text-xs text-[#555] tracking-widest uppercase leading-relaxed max-w-sm">
-                                    Drag the globe to turn it. Select a location below to explore the skills that live there.
-                                </p>
-                            )}
-                        </div>
+                    <div className="flex justify-center px-6 md:px-10 pt-16 pb-10">
+                        <div
+                            ref={containerRef}
+                            className="relative w-full max-w-[720px] mx-auto"
+                            style={{ height: 480 }}
+                        />
                     </div>
 
-                    {/* Category legend — also the category selector */}
+                    {/* Category legend — click to spotlight that category */}
                     <div className="px-4 py-4 md:p-6 border-t border-white/5 bg-black/50 backdrop-blur-sm flex gap-5 md:gap-10 overflow-x-auto no-scrollbar">
                         {categoryList.map((cat) => (
                             <button

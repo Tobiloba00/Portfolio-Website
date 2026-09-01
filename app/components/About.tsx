@@ -27,7 +27,7 @@ const bioP1: TypewriterSegment[] = [
 ];
 
 const bioP2: TypewriterSegment[] = [
-    { text: "I've run the customer operations backend for two UK brands: " },
+    { text: "I've run the customer operations backend for two clients: " },
     { text: "Mocha Properties", className: "text-amber" },
     { text: " (real estate) and " },
     { text: "BIUK", className: "text-amber" },
@@ -41,13 +41,7 @@ const bioP3: TypewriterSegment[] = [
 ];
 
 const bioP4: TypewriterSegment[] = [
-    { text: "On the product side: a peer-to-peer university marketplace, a mobile employee tracking app, an AI math tutoring app live on iOS and Android, a lenticular art marketplace with a " },
-    { text: "95% bandwidth reduction", className: "text-white" },
-    { text: " via dual-bucket image compression, and a mobile app (Fayvrs) with RevenueCat in-app purchases shipped through TestFlight and App Store Connect." },
-];
-
-const bioP5: TypewriterSegment[] = [
-    { text: "I built a full lenticular art marketplace for a UK client — custom sprite sheet generation, a canvas-based interactive viewer that responds to mouse, touch and gyroscope, and a dual-bucket image pipeline that cut their Supabase bandwidth costs by " },
+    { text: "On the product side: a peer-to-peer university marketplace, a mobile employee tracking app, an AI math tutoring app live on iOS and Android, and Fayvrs — a mobile app with RevenueCat in-app purchases shipped through TestFlight and App Store Connect. The one I'm proudest of is a lenticular art marketplace: custom sprite sheet generation, a canvas-based interactive viewer that responds to mouse, touch and gyroscope, and a dual-bucket image pipeline that cut Supabase bandwidth costs by " },
     { text: "95%", className: "text-white" },
     { text: "." },
 ];
@@ -151,16 +145,6 @@ export default function About() {
                             whileInView={{ opacity: 1, y: 0 }}
                             viewport={{ once: true, margin: '-80px' }}
                             transition={{ duration: 0.6, delay: 0.2 }}
-                            className="font-body text-[#aaa] text-sm md:text-base leading-relaxed"
-                        >
-                            {renderSegments(bioP5)}
-                        </motion.p>
-
-                        <motion.p
-                            initial={{ opacity: 0, y: 12 }}
-                            whileInView={{ opacity: 1, y: 0 }}
-                            viewport={{ once: true, margin: '-80px' }}
-                            transition={{ duration: 0.6, delay: 0.25 }}
                             className="font-body text-[#888] text-sm md:text-base leading-relaxed"
                         >
                             {renderSegments(bioP6)}
