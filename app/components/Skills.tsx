@@ -12,7 +12,7 @@ export type CategoryKey =
     | 'Infrastructure'
     | 'Platforms & Tools';
 
-type Skill = {
+export type Skill = {
     name: string;
     category: CategoryKey;
 };
@@ -26,7 +26,7 @@ export const categoryColors: Record<CategoryKey, string> = {
     'Platforms & Tools': '#F0F0F0',
 };
 
-const skills: Skill[] = [
+export const skills: Skill[] = [
     // AI & Automation
     { name: 'Workflow Automation', category: 'AI & Automation' },
     { name: 'LLM Prompt Eng', category: 'AI & Automation' },

@@ -3,8 +3,15 @@
 import { useEffect, useMemo, useRef, useState, type Dispatch, type SetStateAction } from 'react';
 import * as THREE from 'three';
 import { Canvas, useFrame } from '@react-three/fiber';
-import { Stars } from '@react-three/drei';
+import { Stars, Html } from '@react-three/drei';
 import { X, RotateCcw } from 'lucide-react';
+import { skills, categoryColors } from './Skills';
+
+// Fixed world-space camera offset — it does NOT rotate with the player's
+// facing. A camera that swings around behind a turning robot makes WASD
+// feel unpredictable (which key does what keeps changing); keeping the
+// camera at a constant angle makes controls fully predictable instead.
+const CAMERA_OFFSET = new THREE.Vector3(0, 10, 14);
 
 const MAX_ENEMIES = 5;
 const MAX_PROJECTILES = 40;
@@ -60,21 +67,57 @@ function getMovementInput(input: InputState): { x: number; z: number } {
     return { x, z };
 }
 
-function RobotModel({ color, scale = 1 }: { color: string; scale?: number }) {
+function RobotModel({
+    color,
+    accentColor,
+    scale = 1,
+}: {
+    color: string;
+    accentColor?: string;
+    scale?: number;
+}) {
+    const glow = accentColor ?? color;
     return (
         <group scale={scale}>
+            {/* torso */}
             <mesh castShadow>
                 <boxGeometry args={[0.9, 1.1, 1.2]} />
-                <meshStandardMaterial color={color} metalness={0.6} roughness={0.3} />
+                <meshStandardMaterial color={color} metalness={0.7} roughness={0.25} />
             </mesh>
+            {/* chest core */}
+            <mesh position={[0, 0.1, 0.61]}>
+                <circleGeometry args={[0.16, 16]} />
+                <meshStandardMaterial color="#000000" emissive={glow} emissiveIntensity={2.5} toneMapped={false} />
+            </mesh>
+            {/* head */}
             <mesh position={[0, 0.85, 0.1]} castShadow>
                 <boxGeometry args={[0.5, 0.4, 0.5]} />
-                <meshStandardMaterial color="#1a1a1a" metalness={0.8} roughness={0.2} />
+                <meshStandardMaterial color="#1a1a1a" metalness={0.85} roughness={0.15} />
             </mesh>
+            {/* visor */}
             <mesh position={[0, 0.85, 0.36]}>
                 <boxGeometry args={[0.35, 0.12, 0.05]} />
-                <meshStandardMaterial color="#000000" emissive={color} emissiveIntensity={2.5} toneMapped={false} />
+                <meshStandardMaterial color="#000000" emissive={glow} emissiveIntensity={2.5} toneMapped={false} />
             </mesh>
+            {/* antenna */}
+            <mesh position={[0.15, 1.18, 0]}>
+                <cylinderGeometry args={[0.02, 0.02, 0.35, 6]} />
+                <meshStandardMaterial color="#333" metalness={0.7} roughness={0.3} />
+            </mesh>
+            <mesh position={[0.15, 1.37, 0]}>
+                <sphereGeometry args={[0.05, 8, 8]} />
+                <meshStandardMaterial color="#000000" emissive={glow} emissiveIntensity={3} toneMapped={false} />
+            </mesh>
+            {/* shoulder pads */}
+            <mesh position={[-0.65, 0.55, 0]} castShadow>
+                <boxGeometry args={[0.4, 0.25, 0.45]} />
+                <meshStandardMaterial color={color} metalness={0.6} roughness={0.35} />
+            </mesh>
+            <mesh position={[0.65, 0.55, 0]} castShadow>
+                <boxGeometry args={[0.4, 0.25, 0.45]} />
+                <meshStandardMaterial color={color} metalness={0.6} roughness={0.35} />
+            </mesh>
+            {/* arms */}
             <mesh position={[-0.65, 0.1, 0]} castShadow>
                 <boxGeometry args={[0.3, 0.9, 0.3]} />
                 <meshStandardMaterial color="#2a2a2a" metalness={0.6} roughness={0.4} />
@@ -83,13 +126,14 @@ function RobotModel({ color, scale = 1 }: { color: string; scale?: number }) {
                 <boxGeometry args={[0.3, 0.9, 0.3]} />
                 <meshStandardMaterial color="#2a2a2a" metalness={0.6} roughness={0.4} />
             </mesh>
+            {/* thrusters */}
             <mesh position={[-0.3, -0.25, -0.65]}>
                 <cylinderGeometry args={[0.15, 0.2, 0.4, 8]} />
-                <meshStandardMaterial color="#000000" emissive={color} emissiveIntensity={3} toneMapped={false} />
+                <meshStandardMaterial color="#000000" emissive={glow} emissiveIntensity={3} toneMapped={false} />
             </mesh>
             <mesh position={[0.3, -0.25, -0.65]}>
                 <cylinderGeometry args={[0.15, 0.2, 0.4, 8]} />
-                <meshStandardMaterial color="#000000" emissive={color} emissiveIntensity={3} toneMapped={false} />
+                <meshStandardMaterial color="#000000" emissive={glow} emissiveIntensity={3} toneMapped={false} />
             </mesh>
         </group>
     );
@@ -99,16 +143,25 @@ function SpaceArena({
     inputRef,
     setScore,
     setPlayerHp,
+    setLastKill,
 }: {
     inputRef: React.MutableRefObject<InputState>;
     setScore: Dispatch<SetStateAction<number>>;
     setPlayerHp: Dispatch<SetStateAction<number>>;
+    setLastKill: Dispatch<SetStateAction<string | null>>;
 }) {
     const playerGroupRef = useRef<THREE.Group>(null);
     const playerFacing = useRef(new THREE.Vector3(0, 0, 1));
     const nextPlayerFireAt = useRef(0);
     const invulnerableUntil = useRef(0);
     const respawnScheduled = useRef(false);
+
+    // Each enemy is "branded" as one of the actual portfolio skills on spawn —
+    // this is what ties the playground back to the rest of the site instead
+    // of being generic robots. Updates only on (re)spawn, not every frame.
+    const [enemyLabels, setEnemyLabels] = useState<{ name: string; color: string }[]>(
+        Array.from({ length: MAX_ENEMIES }, () => ({ name: '', color: '#FF3B3B' }))
+    );
 
     const enemyGroupRefs = useRef<(THREE.Group | null)[]>(Array(MAX_ENEMIES).fill(null));
     // wanderSeed/hp start at deterministic placeholders — spawnEnemy() (called
@@ -145,7 +198,7 @@ function SpaceArena({
         }))
     );
 
-    function spawnEnemy(slot: EnemySlot, now: number) {
+    function spawnEnemy(slot: EnemySlot, now: number, index: number) {
         const angle = Math.random() * Math.PI * 2;
         const dist = 10 + Math.random() * 10;
         slot.position.set(Math.cos(angle) * dist, (Math.random() - 0.5) * 6 + 2.5, Math.sin(angle) * dist);
@@ -153,6 +206,13 @@ function SpaceArena({
         slot.active = true;
         slot.wanderSeed = Math.random() * 1000;
         slot.nextFireAt = now + 1 + Math.random() * 2;
+
+        const skill = skills[Math.floor(Math.random() * skills.length)];
+        setEnemyLabels((prev) => {
+            const next = [...prev];
+            next[index] = { name: skill.name, color: categoryColors[skill.category] };
+            return next;
+        });
     }
 
     function fireProjectile(origin: THREE.Vector3, direction: THREE.Vector3, owner: 'player' | 'enemy') {
@@ -221,10 +281,12 @@ function SpaceArena({
                 }
             }
 
-            // Chase camera — stays behind the player relative to facing.
-            const behind = playerFacing.current.clone().multiplyScalar(-8.5);
-            const desiredCamPos = player.position.clone().add(behind).add(new THREE.Vector3(0, 4.2, 0));
-            state.camera.position.lerp(desiredCamPos, 0.07);
+            // Follow camera at a fixed world-space angle — it tracks the
+            // player's position but never rotates with their facing, so
+            // WASD always means the same thing on screen regardless of
+            // which way the robot is turned.
+            const desiredCamPos = player.position.clone().add(CAMERA_OFFSET);
+            state.camera.position.lerp(desiredCamPos, 0.08);
             state.camera.lookAt(player.position.clone().add(new THREE.Vector3(0, 1, 0)));
         }
 
@@ -234,7 +296,7 @@ function SpaceArena({
             const g = enemyGroupRefs.current[i];
             if (!d.active) {
                 if (g) g.visible = false;
-                if (now >= d.respawnAt) spawnEnemy(d, now);
+                if (now >= d.respawnAt) spawnEnemy(d, now, i);
                 continue;
             }
             if (!g) continue;
@@ -295,6 +357,7 @@ function SpaceArena({
                             ed.respawnAt = now + 1.5;
                             spawnExplosion(ed.position.clone());
                             setScore((s) => s + 1);
+                            setLastKill(enemyLabels[j]?.name ?? null);
                         }
                         break;
                     }
@@ -373,7 +436,15 @@ function SpaceArena({
                     }}
                     visible={false}
                 >
-                    <RobotModel color="#FF3B3B" scale={0.95} />
+                    <RobotModel color="#FF3B3B" accentColor={enemyLabels[i]?.color} scale={0.95} />
+                    <Html center distanceFactor={14} position={[0, 1.7, 0]} style={{ pointerEvents: 'none' }}>
+                        <span
+                            className="font-body text-[10px] tracking-widest uppercase whitespace-nowrap"
+                            style={{ color: enemyLabels[i]?.color ?? '#FF3B3B', textShadow: '0 1px 4px rgba(0,0,0,0.9)' }}
+                        >
+                            {enemyLabels[i]?.name}
+                        </span>
+                    </Html>
                 </group>
             ))}
 
@@ -475,6 +546,7 @@ export default function Playground({ onClose }: { onClose: () => void }) {
     const [resetKey, setResetKey] = useState(0);
     const [score, setScore] = useState(0);
     const [playerHp, setPlayerHp] = useState(PLAYER_MAX_HP);
+    const [lastKill, setLastKill] = useState<string | null>(null);
     // Playground is dynamically imported with ssr:false, so `window` is
     // always available here — a lazy initializer avoids a setState-in-effect.
     const [isTouch] = useState(() => window.matchMedia('(pointer: coarse)').matches);
@@ -506,10 +578,17 @@ export default function Playground({ onClose }: { onClose: () => void }) {
         };
     }, [onClose]);
 
+    useEffect(() => {
+        if (!lastKill) return;
+        const t = setTimeout(() => setLastKill(null), 2200);
+        return () => clearTimeout(t);
+    }, [lastKill]);
+
     const handleReset = () => {
         setResetKey((k) => k + 1);
         setScore(0);
         setPlayerHp(PLAYER_MAX_HP);
+        setLastKill(null);
     };
 
     return (
@@ -553,6 +632,11 @@ export default function Playground({ onClose }: { onClose: () => void }) {
                         />
                     ))}
                 </div>
+                {lastKill && (
+                    <p className="text-[10px] tracking-widest text-green-neon uppercase mt-3">
+                        Mastered // {lastKill}
+                    </p>
+                )}
             </div>
 
             <Canvas
@@ -567,7 +651,13 @@ export default function Playground({ onClose }: { onClose: () => void }) {
             >
                 <color attach="background" args={['#05050a']} />
                 <fog attach="fog" args={['#05050a', 20, 55]} />
-                <SpaceArena key={resetKey} inputRef={inputRef} setScore={setScore} setPlayerHp={setPlayerHp} />
+                <SpaceArena
+                    key={resetKey}
+                    inputRef={inputRef}
+                    setScore={setScore}
+                    setPlayerHp={setPlayerHp}
+                    setLastKill={setLastKill}
+                />
             </Canvas>
 
             {isTouch && (
