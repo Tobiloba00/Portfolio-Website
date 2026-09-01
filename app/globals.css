@@ -7,17 +7,6 @@
   --color-surface: #0e0e0e;
 }
 
-/* Skills tag cloud — one floating span per skill, positioned by TagCloud.js */
-.tagcloud--item {
-  font-family: var(--font-body, 'JetBrains Mono', monospace);
-  font-size: 10px;
-  letter-spacing: 0.06em;
-  text-transform: uppercase;
-  white-space: nowrap;
-  transition: filter 0.3s ease;
-  cursor: default;
-}
-
 /* Reset & base */
 *,
 *::before,

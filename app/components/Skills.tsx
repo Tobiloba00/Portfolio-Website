@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect, useRef, useState } from 'react';
-import TagCloud from 'TagCloud';
+import createGlobe, { type Marker } from 'cobe';
 import SectionHeader from './SectionHeader';
 
 export type CategoryKey =
@@ -102,13 +102,95 @@ const categoryList: CategoryKey[] = [
     'Platforms & Tools',
 ];
 
+// Evenly scatter every skill across the sphere — one "continent" per
+// skill — using a Fibonacci-sphere distribution instead of real geography.
+const skillLocations: [number, number][] = (() => {
+    const n = skills.length;
+    const goldenAngle = Math.PI * (3 - Math.sqrt(5));
+    return skills.map((_, i) => {
+        const y = 1 - (i / (n - 1)) * 2;
+        const radiusAtY = Math.sqrt(Math.max(0, 1 - y * y));
+        const theta = goldenAngle * i;
+        const x = Math.cos(theta) * radiusAtY;
+        const z = Math.sin(theta) * radiusAtY;
+        const lat = (Math.asin(y) * 180) / Math.PI;
+        const lng = (Math.atan2(z, x) * 180) / Math.PI;
+        return [lat, lng];
+    });
+})();
+
+function hexToRgb01(hex: string): [number, number, number] {
+    const clean = hex.replace('#', '');
+    return [
+        parseInt(clean.substring(0, 2), 16) / 255,
+        parseInt(clean.substring(2, 4), 16) / 255,
+        parseInt(clean.substring(4, 6), 16) / 255,
+    ];
+}
+
+function buildMarkers(selected: CategoryKey | null): Marker[] {
+    return skills.map((s, i) => ({
+        location: skillLocations[i],
+        size: selected === s.category ? 0.05 : 0.035,
+        color: hexToRgb01(categoryColors[s.category]),
+    }));
+}
+
+// Mirrors COBE's own lat/lng -> unit-sphere-vector conversion so our HTML
+// labels can be projected in perfect sync with what the globe renders.
+function toUnitVector(lat: number, lng: number): [number, number, number] {
+    const phi = (lat * Math.PI) / 180;
+    const lambda = (lng * Math.PI) / 180 - Math.PI;
+    const cosPhi = Math.cos(phi);
+    return [-cosPhi * Math.cos(lambda), Math.sin(phi), cosPhi * Math.sin(lambda)];
+}
+
+// Mirrors COBE's internal rotation + perspective projection (same phi/theta
+// state we feed into globe.update()) to get each marker's screen position.
+function projectToScreen(
+    point: [number, number, number],
+    rotationPhi: number,
+    theta: number
+): { x: number; y: number; visible: boolean } {
+    const cosTheta = Math.cos(theta);
+    const cosPhi = Math.cos(rotationPhi);
+    const sinTheta = Math.sin(theta);
+    const sinPhi = Math.sin(rotationPhi);
+    const c = cosPhi * point[0] + sinPhi * point[2];
+    const s = sinPhi * sinTheta * point[0] + cosTheta * point[1] - cosPhi * sinTheta * point[2];
+    const x = (c + 1) / 2;
+    const y = (-s + 1) / 2;
+    const frontFacing = -sinPhi * cosTheta * point[0] + sinTheta * point[1] + cosPhi * cosTheta * point[2];
+    const visible = frontFacing >= 0 || c * c + s * s >= 0.64;
+    return { x, y, visible };
+}
+
+const MARKER_ELEVATION = 0.05;
+const GLOBE_SURFACE_RADIUS = 0.8;
+const skillUnitVectors = skillLocations.map(([lat, lng]) => {
+    const v = toUnitVector(lat, lng);
+    const r = GLOBE_SURFACE_RADIUS + MARKER_ELEVATION;
+    return [v[0] * r, v[1] * r, v[2] * r] as [number, number, number];
+});
+
 export default function Skills() {
     const wrapperRef = useRef<HTMLDivElement>(null);
-    const containerRef = useRef<HTMLDivElement>(null);
+    const canvasRef = useRef<HTMLCanvasElement>(null);
+    const labelRefs = useRef<(HTMLSpanElement | null)[]>([]);
+    const widthRef = useRef(0);
+    const phiRef = useRef(0);
+    const pointerInteracting = useRef<number | null>(null);
+    const pointerMovement = useRef(0);
+    const selectedCategoryRef = useRef<CategoryKey | null>(null);
+
     const [inView, setInView] = useState(false);
     const [selectedCategory, setSelectedCategory] = useState<CategoryKey | null>(null);
 
-    // Only run the tag cloud while the section is actually on screen.
+    useEffect(() => {
+        selectedCategoryRef.current = selectedCategory;
+    }, [selectedCategory]);
+
+    // Only run the globe while the section is actually on screen.
     useEffect(() => {
         const el = wrapperRef.current;
         if (!el) return;
@@ -122,44 +204,98 @@ export default function Skills() {
 
     useEffect(() => {
         if (!inView) return;
-        const container = containerRef.current;
-        if (!container) return;
+        const canvas = canvasRef.current;
+        if (!canvas) return;
 
         const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-        const radius = window.innerWidth < 640 ? 135 : window.innerWidth < 1024 ? 175 : 220;
+        const devicePixelRatio = Math.min(window.devicePixelRatio || 1, 2);
+        const theta = 0.3;
 
-        const texts = skills.map(
-            (s) => `<span style="color:${categoryColors[s.category]}">${s.name}</span>`
-        );
+        const onResize = () => {
+            widthRef.current = canvas.offsetWidth;
+        };
+        window.addEventListener('resize', onResize);
+        onResize();
 
-        const cloud = TagCloud(container, texts, {
-            radius,
-            maxSpeed: 'fast',
-            initSpeed: 'slow',
-            keep: true,
-            useHTML: true,
+        const globe = createGlobe(canvas, {
+            devicePixelRatio,
+            width: widthRef.current * devicePixelRatio,
+            height: widthRef.current * devicePixelRatio,
+            phi: phiRef.current,
+            theta,
+            dark: 1,
+            diffuse: 1.2,
+            mapSamples: 16000,
+            mapBrightness: 6,
+            baseColor: [0.3, 0.3, 0.3],
+            markerColor: [0.96, 0.65, 0.14],
+            glowColor: [0.15, 0.15, 0.15],
+            markers: buildMarkers(selectedCategoryRef.current),
         });
 
-        if (prefersReducedMotion) cloud.pause();
+        let animationFrameId: number;
+        const render = () => {
+            if (!prefersReducedMotion && pointerInteracting.current === null) {
+                phiRef.current += 0.003;
+            }
+            const currentPhi = phiRef.current + pointerMovement.current;
+
+            globe.update({
+                phi: currentPhi,
+                width: widthRef.current * devicePixelRatio,
+                height: widthRef.current * devicePixelRatio,
+                markers: buildMarkers(selectedCategoryRef.current),
+            });
+
+            const selected = selectedCategoryRef.current;
+            for (let i = 0; i < skills.length; i++) {
+                const label = labelRefs.current[i];
+                if (!label) continue;
+                const { x, y, visible } = projectToScreen(skillUnitVectors[i], currentPhi, theta);
+                if (!visible || x < -0.05 || x > 1.05 || y < -0.05 || y > 1.05) {
+                    label.style.display = 'none';
+                    continue;
+                }
+                label.style.display = 'block';
+                label.style.left = `${x * 100}%`;
+                label.style.top = `${y * 100}%`;
+                const dimmed = selected && skills[i].category !== selected;
+                label.style.opacity = dimmed ? '0.12' : '';
+            }
+
+            animationFrameId = requestAnimationFrame(render);
+        };
+        render();
+
+        const onPointerDown = (e: PointerEvent) => {
+            pointerInteracting.current = e.clientX - pointerMovement.current * 200;
+            canvas.style.cursor = 'grabbing';
+        };
+        const onPointerUp = () => {
+            pointerInteracting.current = null;
+            canvas.style.cursor = 'grab';
+        };
+        const onPointerMove = (e: PointerEvent) => {
+            if (pointerInteracting.current !== null) {
+                const delta = e.clientX - pointerInteracting.current;
+                pointerMovement.current = delta / 200;
+            }
+        };
+
+        canvas.style.cursor = 'grab';
+        canvas.addEventListener('pointerdown', onPointerDown);
+        window.addEventListener('pointerup', onPointerUp);
+        window.addEventListener('pointermove', onPointerMove);
 
         return () => {
-            cloud.destroy();
+            window.removeEventListener('resize', onResize);
+            canvas.removeEventListener('pointerdown', onPointerDown);
+            window.removeEventListener('pointerup', onPointerUp);
+            window.removeEventListener('pointermove', onPointerMove);
+            cancelAnimationFrame(animationFrameId);
+            globe.destroy();
         };
     }, [inView]);
-
-    // Dim everything outside the selected category without touching the
-    // inline transform/opacity the library animates every frame.
-    useEffect(() => {
-        const container = containerRef.current;
-        if (!container) return;
-        const items = container.querySelectorAll<HTMLElement>('.tagcloud--item');
-        items.forEach((item, i) => {
-            const cat = skills[i]?.category;
-            item.style.filter = !selectedCategory || cat === selectedCategory
-                ? ''
-                : 'brightness(0.25) saturate(0.4)';
-        });
-    }, [selectedCategory, inView]);
 
     return (
         <section id="skills" className="relative py-24 md:py-32 px-5 md:px-6 bg-[#080808]">
@@ -173,16 +309,30 @@ export default function Skills() {
                 <div ref={wrapperRef} className="relative mt-12 bg-[#0a0a0a] border border-white/5 overflow-hidden">
                     <div className="absolute top-4 left-6 z-10 pointer-events-none">
                         <p className="font-body text-[8px] tracking-[0.4em] text-[#333] uppercase">
-                            Interactable // Every Skill, All At Once
+                            Interactable // 53 Skills, One World
                         </p>
                     </div>
 
                     <div className="flex justify-center px-6 md:px-10 pt-16 pb-10">
-                        <div
-                            ref={containerRef}
-                            className="relative w-full max-w-[720px] mx-auto"
-                            style={{ height: 480 }}
-                        />
+                        <div className="relative w-full max-w-[520px] aspect-square mx-auto">
+                            <canvas
+                                ref={canvasRef}
+                                className="w-full h-full cursor-pointer touch-pan-y"
+                            />
+                            {skills.map((s, i) => (
+                                <span
+                                    key={s.name}
+                                    ref={(el) => { labelRefs.current[i] = el; }}
+                                    className="absolute font-body text-[8px] tracking-wide uppercase whitespace-nowrap pointer-events-none -translate-x-1/2 -translate-y-1/2 transition-opacity duration-300"
+                                    style={{
+                                        color: categoryColors[s.category],
+                                        textShadow: '0 1px 3px rgba(0,0,0,0.9)',
+                                    }}
+                                >
+                                    {s.name}
+                                </span>
+                            ))}
+                        </div>
                     </div>
 
                     {/* Category legend — click to spotlight that category */}
